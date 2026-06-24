@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Zoho Desk - Apps</title>
+</head>
+
+<body>
+
+	<h2>Ticket Incident Insights</h2>
+
+	<div id="output">Loading...</div>
+
+	<script src="https://static.zohocdn.com/zohodeskmarketplacesdkstatic/developer_sdk/v1/js/ZohoDeskClientSDK.min.js"></script>
+	<script src="./js/config.js"></script>
+	<script src="./js/geminiService.js"></script>
+	<script src="./js/ticketService.js"></script>
+	<script src="./js/dashboard.js"></script>
+
+	<script>
+	window.onload = function () {
+  
+	 ZOHODESK.extension.onload().then(function (App) {
+		//Get ticket related data
+	        console.log("Extension Loaded Successfully");
+
+			     getRecentTickets().then(function (processedTickets) {
+
+						const prompt = buildIncidentPrompt(processedTickets);
+						
+
+						callGemini(prompt).then(function (incidentResponse) {
+							renderDashboard(incidentResponse, processedTickets);
+            						
+						}).catch(function (err) {
+								console.error("Error calling Gemini:", err);
+						});
+					}).catch(function (err) {
+						console.error("Error fetching recent tickets:", err);
+					});
+
+			}).catch(function (err) {
+				console.log(err);
+			});
+}
+</script>
+	<script src="./js/extension.js"></script>
+</body>
+
+</html>
